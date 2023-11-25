@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     
     # local app
-    'music_api.apps.MusicApiConfig'
+    'music_api.apps.MusicApiConfig',
+    'frontend.apps.FrontendConfig',
 ]
 
 MIDDLEWARE = [
