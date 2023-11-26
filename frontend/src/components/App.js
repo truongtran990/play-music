@@ -1,13 +1,23 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 
+import HomePage from "./Pages/HomePage";
+import JoinRoomPage from "./Pages/JoinRoomPage";
+import CreateRoomPage from "./Pages/CreateRoomPage";
+
 export default class App extends Component {
   constructor(props) {
     super(props);
   }
 
   render() {
-    return <h1>Testing React code</h1>
+    return (
+      <div>
+        <HomePage />
+        <JoinRoomPage />
+        <CreateRoomPage />
+      </div>
+    );
   }
 }
 
