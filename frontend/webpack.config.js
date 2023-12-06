@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 
-const mode = "production";
+const mode = "development";
 module.exports = {
   mode,
   entry: "./src/index.js",
