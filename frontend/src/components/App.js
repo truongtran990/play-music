@@ -5,7 +5,7 @@ import HomePage from "./Pages/HomePage";
 
 const App = (props) => {
   return (
-    <div>
+    <div className="center">
       <HomePage />
     </div>
   );
