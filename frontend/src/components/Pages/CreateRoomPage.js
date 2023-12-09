@@ -10,13 +10,14 @@ import {
   RadioGroup,
   FormControlLabel,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateRoomPage = (props) => {
   const defaultVotes = 2;
 
   const [guestCanPause, setGuestCanPause] = useState(true);
   const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
+  const navigate = useNavigate();
 
   const handleVotesChange = (e) => {
     setVotesToSkip(e.target.value);
@@ -49,6 +50,7 @@ const CreateRoomPage = (props) => {
       })
       .then((data) => {
         console.log(data);
+        navigate(`/room/${data.code}`);
       });
   };
 
