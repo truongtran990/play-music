@@ -78,3 +78,15 @@ class JoinRoomView(APIView):
                 return Response({'message': 'Room Joined!'}, status=status.HTTP_200_OK)
             return Response({'error': 'Invalid Room Code'}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'error': 'Invalid post data, did not find a code key'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UserInRoom(APIView):
+    def get(self, request, format=None, *args, **kwargs):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        
+        data = {
+            'code': self.request.session.get('room_code')
+        }
+        print("data:UserInRoom ", data)
+        return Response(data, status=status.HTTP_200_OK)
