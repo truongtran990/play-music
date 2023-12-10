@@ -46,6 +46,10 @@ const HomePage = (props) => {
     );
   };
 
+  const clearRoomCode = () => {
+    setRoomCode(null);
+  };
+
   return (
     <div>
       <BrowserRouter>
@@ -53,7 +57,10 @@ const HomePage = (props) => {
           <Route exact path="/" element={renderedContent()} />
           <Route path="/join" element={<JoinRoomPage />} />
           <Route path="/create" element={<CreateRoomPage />} />
-          <Route path="/room/:roomCode" element={<Room />} />
+          <Route
+            path="/room/:roomCode"
+            element={<Room {...props} leaveRoomCallBack={clearRoomCode} />}
+          />
         </Routes>
       </BrowserRouter>
     </div>

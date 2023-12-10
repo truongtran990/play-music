@@ -90,3 +90,16 @@ class UserInRoom(APIView):
         }
         print("data:UserInRoom ", data)
         return Response(data, status=status.HTTP_200_OK)
+
+
+class LeaveRoom(APIView):
+    def post(self, request, format=None, *args, **kwargs):
+        if 'room_code' in self.request.session:
+            self.request.session.pop('room_code')
+            host_id = self.request.session.session_key
+            room_queryset = Room.objects.filter(host=host_id)
+            if room_queryset.exists():
+                room = room_queryset[0]
+                room.delete()
+        
+        return Response({'message': 'Success'}, status=status.HTTP_200_OK)
