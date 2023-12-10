@@ -128,3 +128,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+static/frontend/main.js.LICENSE.txt
+static/frontend/main.js

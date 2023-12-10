@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 local-cmd-history.txt
 frontend/static/frontend/main.js.LICENSE.txt
+frontend/static/frontend/main.js
