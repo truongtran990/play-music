@@ -10,7 +10,7 @@ const HomePage = (props) => {
   const [roomCode, setRoomCode] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/user-in-room`)
+    fetch(`/api/user-in-room/`)
       .then((res) => res.json())
       .then((data) => setRoomCode(data.code))
       .catch((err) => console.error(err));
