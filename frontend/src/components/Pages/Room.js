@@ -11,6 +11,7 @@ const Room = (props) => {
   const [guestCanPause, setGuestCanPause] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [isShowSetting, setIsShowSetting] = useState(false);
+  const [isSpotifyAuthenticated, setIsSpotifyAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   const getRoomDetail = () => {
@@ -28,9 +29,29 @@ const Room = (props) => {
         setVotesToSkip(data.votes_to_skip);
         setGuestCanPause(data.guest_can_pause);
         setIsHost(data.is_host);
+
+        if (data.is_host) {
+          authenticaSpotify();
+        }
       })
       .catch((err) => {
         alert(err);
+      });
+  };
+
+  const authenticaSpotify = () => {
+    fetch(`/spotify/is-authenticated`)
+      .then((res) => res.json())
+      .then((data) => {
+        setIsSpotifyAuthenticated(data.status);
+
+        if (!data.status) {
+          fetch("/spotify/get-auth-url")
+            .then((res) => res.json())
+            .then((data) => {
+              window.location.replace(data.url);
+            });
+        }
       });
   };
 

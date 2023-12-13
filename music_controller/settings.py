@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # local app
     'music_api.apps.MusicApiConfig',
     'frontend.apps.FrontendConfig',
+    'spotify.apps.SpotifyConfig',
 ]
 
 MIDDLEWARE = [

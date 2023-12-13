@@ -26,7 +26,7 @@ const CreateRoomPage = (props) => {
   const defaultVotes = 2;
 
   const [guestCanPause, setGuestCanPause] = useState(
-    props.guestCanPause || defaultCreateRoomPageProps.guestCanPause
+    props.guestCanPause ?? defaultCreateRoomPageProps.guestCanPause
   );
   const [votesToSkip, setVotesToSkip] = useState(
     props.votesToSkip || defaultCreateRoomPageProps.votesToSkip
@@ -161,7 +161,7 @@ const CreateRoomPage = (props) => {
           <FormHelperText>
             <p align="center">Guest Control of Playback State</p>
           </FormHelperText>
-          <RadioGroup row defaultValue={props.guestCanPause.toString()}>
+          <RadioGroup row defaultValue={guestCanPause.toString()}>
             <FormControlLabel
               value="true"
               control={<Radio color="primary"></Radio>}
