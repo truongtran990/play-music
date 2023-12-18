@@ -61,6 +61,7 @@ const HomePage = (props) => {
             path="/room/:roomCode"
             element={<Room {...props} leaveRoomCallBack={clearRoomCode} />}
           />
+          <Route path="/spotify/current-song" element={<SongDetail />} />
         </Routes>
       </BrowserRouter>
     </div>

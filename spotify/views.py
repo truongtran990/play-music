@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post
 
-from .utils import create_or_update_user_token, is_spotify_authenticated
+from .utils import create_or_update_user_token, is_spotify_authenticated, execute_spotify_api_request
+from music_api.models import Room
 
 REDIRECT_URI = os.environ.get('REDIRECT_URI')
 CLIENT_ID = os.environ.get('CLIENT_ID')
@@ -82,3 +83,26 @@ class IsSpotifyAuthenticatedView(APIView):
         }
         print("IsSpotifyAuthenticatedView: ", response_data)
         return Response(data=response_data, status=status.HTTP_200_OK)
+
+
+class GetCurrentSongView(APIView):
+    def get(self, request, format=None, *args, **kwargs):
+        # if not request.session.exists(request.session.session_key):
+        #     request.session.create()
+
+        # get roomCode
+        room_code = self.request.session.get("room_code")
+        query_object = Room.objects.filter(code=room_code)
+        
+        if not query_object.exists():
+            return Response(data={"error": "You're not in the room"}, status=status.HTTP_400_BAD_REQUEST)
+
+        room = query_object[0]
+        host = room.host
+        # host = "fba5ljmsjcmki8m75xznuzqibxg1t1p2"
+        
+        endpoint = "player/currently-playing"
+        response = execute_spotify_api_request(host, endpoint)
+        print("CurrentSongView: ", response)
+
+        return Response(data={"response": response}, status=status.HTTP_200_OK)
