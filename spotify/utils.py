@@ -65,9 +65,9 @@ def refresh_spotify_token(token):
 
     access_token = response.get("access_token")
     token_type = response.get("token_type")
-    refresh_token = response.get("refresh_token")
+    refresh_token = response.get("refresh_token") or refresh_token
     expires_in = response.get("expires_in")
-    session_id = token.session_id
+    session_id = token.user
 
     create_or_update_user_token(
         session_id=session_id,
@@ -79,6 +79,12 @@ def refresh_spotify_token(token):
 
 def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     tokens = get_user_token(session_id)
+
+
+    if tokens:
+        expiry = tokens.expires_in
+        if expiry <= timezone.now():
+            refresh_spotify_token(tokens)
 
     headers = {
         "Content-Type": "application/json",
@@ -94,9 +100,8 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
 
     try:
         if response.status_code == 204:
-            return {"data": "No data to display"}
+            return {"error": "No data to display"}
         elif response.status_code == 200:
             return response.json()
-        raise Exception
     except Exception as ex:
         return {"error": f"Issue with request {ex}"}

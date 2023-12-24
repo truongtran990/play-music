@@ -12,6 +12,7 @@ const Room = (props) => {
   const [isHost, setIsHost] = useState(false);
   const [isShowSetting, setIsShowSetting] = useState(false);
   const [isSpotifyAuthenticated, setIsSpotifyAuthenticated] = useState(false);
+  const [song, setSong] = useState({});
   const navigate = useNavigate();
 
   const getRoomDetail = () => {
@@ -113,8 +114,26 @@ const Room = (props) => {
     );
   };
 
+  const getCurrentSong = () => {
+    fetch(`/spotify/current-song`)
+      .then((res) => {
+        if (res.status != 200) {
+          return {};
+        } else {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        setSong(data);
+      });
+  };
+
   useEffect(() => {
     getRoomDetail();
+  }, []);
+
+  useEffect(() => {
+    getCurrentSong();
   }, []);
 
   return isShowSetting ? (
@@ -126,7 +145,8 @@ const Room = (props) => {
           Code: {roomCode}
         </Typography>
       </Grid>
-      <Grid item xs={12} align="center">
+
+      {/* <Grid item xs={12} align="center">
         <Typography variant="h6" component="h6">
           Votes: {votesToSkip}
         </Typography>
@@ -140,7 +160,9 @@ const Room = (props) => {
         <Typography variant="h6" component="h6">
           Host: {isHost.toString()}
         </Typography>
-      </Grid>
+      </Grid> */}
+
+      {/* <p>{song}</p> */}
 
       {/* conditionally for showing setting button */}
       {isHost ? renderSettingButton() : null}
