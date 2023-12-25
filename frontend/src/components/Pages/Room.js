@@ -139,7 +139,7 @@ const Room = (props) => {
   }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(getCurrentSong, 10000);
+    const intervalId = setInterval(getCurrentSong, 100000);
 
     return () => {
       clearInterval(intervalId);
@@ -157,24 +157,6 @@ const Room = (props) => {
       </Grid>
 
       <MusicPlayer {...song} />
-
-      {/* <Grid item xs={12} align="center">
-        <Typography variant="h6" component="h6">
-          Votes: {votesToSkip}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <Typography variant="h6" component="h6">
-          Guest can pause: {guestCanPause.toString()}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} align="center">
-        <Typography variant="h6" component="h6">
-          Host: {isHost.toString()}
-        </Typography>
-      </Grid> */}
-
-      {/* <p>{song}</p> */}
 
       {/* conditionally for showing setting button */}
       {isHost ? renderSettingButton() : null}
