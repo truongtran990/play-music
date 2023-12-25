@@ -17,6 +17,28 @@ const MusicPlayer = ({
   duration,
 }) => {
   const songProgress = (time / duration) * 100;
+
+  const pauseSong = () => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch("/spotify/pause-song/", requestOptions);
+  };
+
+  const playSong = () => {
+    const requestOptions = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch("/spotify/play-song/", requestOptions);
+  };
   return (
     <Card>
       <Grid container alignItems="center">
@@ -31,7 +53,11 @@ const MusicPlayer = ({
             {artist}
           </Typography>
           <div>
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                is_playing ? pauseSong() : playSong();
+              }}
+            >
               {is_playing ? <Pause></Pause> : <PlayArrow></PlayArrow>}
             </IconButton>
             <IconButton>

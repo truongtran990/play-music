@@ -80,7 +80,6 @@ def refresh_spotify_token(token):
 def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     tokens = get_user_token(session_id)
 
-
     if tokens:
         expiry = tokens.expires_in
         if expiry <= timezone.now():
@@ -92,9 +91,15 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     }
 
     if post_:
-        post(BASE_SPOTIFY_URL + endpoint, headers=headers)
+        response = post(BASE_SPOTIFY_URL + endpoint, headers=headers)
+        if response.status_code != 200:
+            print(f"error when processing endpoint: {endpoint}", response.json())
+            return {"error": response.json().get("error")}
     elif put_:
-        put(BASE_SPOTIFY_URL + endpoint, headers=headers)
+        response = put(BASE_SPOTIFY_URL + endpoint, headers=headers)
+        if response.status_code != 200:
+            print(f"error when processing endpoint: {endpoint}", response.json())
+            return {"error": response.json().get("error")}
     
     response = get(BASE_SPOTIFY_URL + endpoint,headers=headers)
 
@@ -105,3 +110,13 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
             return response.json()
     except Exception as ex:
         return {"error": f"Issue with request {ex}"}
+
+def pause_song(session_id):
+    endpoint = "player/pause"
+    response = execute_spotify_api_request(session_id, endpoint, put_=True)
+    return response
+
+def play_song(session_id):
+    endpoint = "player/play"
+    response = execute_spotify_api_request(session_id, endpoint, put_=True)
+    return response
