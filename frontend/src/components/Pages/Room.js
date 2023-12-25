@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Grid, Button, Typography } from "@mui/material";
 
 import CreateRoomPage from "./CreateRoomPage";
+import MusicPlayer from "../MusicPlayer";
 
 const Room = (props) => {
   const { roomCode } = useParams();
@@ -124,6 +125,7 @@ const Room = (props) => {
         }
       })
       .then((data) => {
+        console.log("getCurrentSong: ", data);
         setSong(data);
       });
   };
@@ -136,6 +138,14 @@ const Room = (props) => {
     getCurrentSong();
   }, []);
 
+  useEffect(() => {
+    const intervalId = setInterval(getCurrentSong, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   return isShowSetting ? (
     renderSettingPageContent()
   ) : (
@@ -145,6 +155,8 @@ const Room = (props) => {
           Code: {roomCode}
         </Typography>
       </Grid>
+
+      <MusicPlayer {...song} />
 
       {/* <Grid item xs={12} align="center">
         <Typography variant="h6" component="h6">
