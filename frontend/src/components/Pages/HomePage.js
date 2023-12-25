@@ -4,6 +4,7 @@ import { Grid, Button, ButtonGroup, Typography } from "@mui/material";
 
 import JoinRoomPage from "./JoinRoomPage";
 import CreateRoomPage from "./CreateRoomPage";
+import SongDetail from "./SongDetail";
 import Room from "./Room";
 
 const HomePage = (props) => {
@@ -61,6 +62,7 @@ const HomePage = (props) => {
             path="/room/:roomCode"
             element={<Room {...props} leaveRoomCallBack={clearRoomCode} />}
           />
+          <Route path="/spotify/current-song" element={<SongDetail />} />
         </Routes>
       </BrowserRouter>
     </div>

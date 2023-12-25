@@ -1,14 +1,16 @@
 import os
 from django.utils import timezone
 from datetime import timedelta
-from requests import Request, post
+from requests import Request, post, put, get
 
 from .models import SpotifyToken
 
 REDIRECT_URI = os.environ.get('REDIRECT_URI')
 CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+BASE_SPOTIFY_URL = "https://api.spotify.com/v1/me/"
 
+# "https://api.spotify.com/v1/me/player/currently-playing"
 EXPIRES_IN = 3600
 
 def get_user_token(session_id):
@@ -63,9 +65,9 @@ def refresh_spotify_token(token):
 
     access_token = response.get("access_token")
     token_type = response.get("token_type")
-    refresh_token = response.get("refresh_token")
+    refresh_token = response.get("refresh_token") or refresh_token
     expires_in = response.get("expires_in")
-    session_id = token.session_id
+    session_id = token.user
 
     create_or_update_user_token(
         session_id=session_id,
@@ -75,3 +77,31 @@ def refresh_spotify_token(token):
         refresh_token=refresh_token,
     )
 
+def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
+    tokens = get_user_token(session_id)
+
+
+    if tokens:
+        expiry = tokens.expires_in
+        if expiry <= timezone.now():
+            refresh_spotify_token(tokens)
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {tokens.access_token}"
+    }
+
+    if post_:
+        post(BASE_SPOTIFY_URL + endpoint, headers=headers)
+    elif put_:
+        put(BASE_SPOTIFY_URL + endpoint, headers=headers)
+    
+    response = get(BASE_SPOTIFY_URL + endpoint,headers=headers)
+
+    try:
+        if response.status_code == 204:
+            return {"error": "No data to display"}
+        elif response.status_code == 200:
+            return response.json()
+    except Exception as ex:
+        return {"error": f"Issue with request {ex}"}

@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Grid, Button, Typography } from "@mui/material";
 
 import CreateRoomPage from "./CreateRoomPage";
+import MusicPlayer from "../MusicPlayer";
 
 const Room = (props) => {
   const { roomCode } = useParams();
@@ -12,6 +13,7 @@ const Room = (props) => {
   const [isHost, setIsHost] = useState(false);
   const [isShowSetting, setIsShowSetting] = useState(false);
   const [isSpotifyAuthenticated, setIsSpotifyAuthenticated] = useState(false);
+  const [song, setSong] = useState({});
   const navigate = useNavigate();
 
   const getRoomDetail = () => {
@@ -113,8 +115,35 @@ const Room = (props) => {
     );
   };
 
+  const getCurrentSong = () => {
+    fetch(`/spotify/current-song`)
+      .then((res) => {
+        if (res.status != 200) {
+          return {};
+        } else {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log("getCurrentSong: ", data);
+        setSong(data);
+      });
+  };
+
   useEffect(() => {
     getRoomDetail();
+  }, []);
+
+  useEffect(() => {
+    getCurrentSong();
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(getCurrentSong, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   return isShowSetting ? (
@@ -126,7 +155,10 @@ const Room = (props) => {
           Code: {roomCode}
         </Typography>
       </Grid>
-      <Grid item xs={12} align="center">
+
+      <MusicPlayer {...song} />
+
+      {/* <Grid item xs={12} align="center">
         <Typography variant="h6" component="h6">
           Votes: {votesToSkip}
         </Typography>
@@ -140,7 +172,9 @@ const Room = (props) => {
         <Typography variant="h6" component="h6">
           Host: {isHost.toString()}
         </Typography>
-      </Grid>
+      </Grid> */}
+
+      {/* <p>{song}</p> */}
 
       {/* conditionally for showing setting button */}
       {isHost ? renderSettingButton() : null}
