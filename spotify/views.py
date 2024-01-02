@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from requests import Request, post
 
-from .utils import create_or_update_user_token, is_spotify_authenticated, execute_spotify_api_request, pause_song, play_song
+from .utils import create_or_update_user_token, is_spotify_authenticated, execute_spotify_api_request, pause_song, play_song, skip_song
 from music_api.models import Room
 
 REDIRECT_URI = os.environ.get('REDIRECT_URI')
@@ -158,6 +158,21 @@ class PlaySongView(APIView):
 
         if self.request.session.session_key == room.host or room.guest_can_pause:
             play_song(room.host)
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+    
+        return Response({}, status=status.HTTP_403_FORBIDDEN)
+
+class SkipSongView(APIView):
+    def post(self, request, format=None, *args, **kwargs):
+        room_code = self.request.session.get("room_code")
+        room = Room.objects.filter(code=room_code)
+
+        if not room: 
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
+        room = room[0]
+
+        if self.request.session.session_key == room.host or room.guest_can_pause:
+            skip_song(room.host)
             return Response({}, status=status.HTTP_204_NO_CONTENT)
     
         return Response({}, status=status.HTTP_403_FORBIDDEN)
