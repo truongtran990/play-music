@@ -149,7 +149,14 @@ const Room = (props) => {
   return isShowSetting ? (
     renderSettingPageContent()
   ) : (
-    <Grid container spacing={1}>
+    <Grid
+      container
+      spacing={1}
+      style={{
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Grid item xs={12} align="center">
         <Typography variant="h4" component="h4">
           Code: {roomCode}

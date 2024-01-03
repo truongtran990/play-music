@@ -15,8 +15,25 @@ const MusicPlayer = ({
   is_playing,
   time,
   duration,
+  votes,
+  needed_votes_to_skip,
 }) => {
   const songProgress = (time / duration) * 100;
+
+  const skipSong = () => {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      fetch("/spotify/skip-song/", requestOptions);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const pauseSong = () => {
     const requestOptions = {
@@ -60,9 +77,10 @@ const MusicPlayer = ({
             >
               {is_playing ? <Pause></Pause> : <PlayArrow></PlayArrow>}
             </IconButton>
-            <IconButton>
-              <SkipNext></SkipNext>
+            <IconButton onClick={skipSong}>
+              <SkipNext />
             </IconButton>
+            <Typography>{`${votes} / ${needed_votes_to_skip}`}</Typography>
           </div>
         </Grid>
       </Grid>

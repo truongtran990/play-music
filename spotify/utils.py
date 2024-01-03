@@ -120,3 +120,8 @@ def play_song(session_id):
     endpoint = "player/play"
     response = execute_spotify_api_request(session_id, endpoint, put_=True)
     return response
+
+def skip_song(session_id):
+    endpoint = "player/next"
+    response = execute_spotify_api_request(session_id, endpoint, post_=True)
+    return response
