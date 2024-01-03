@@ -15,6 +15,8 @@ const MusicPlayer = ({
   is_playing,
   time,
   duration,
+  votes,
+  needed_votes_to_skip,
 }) => {
   const songProgress = (time / duration) * 100;
 
@@ -76,8 +78,9 @@ const MusicPlayer = ({
               {is_playing ? <Pause></Pause> : <PlayArrow></PlayArrow>}
             </IconButton>
             <IconButton onClick={skipSong}>
-              <SkipNext></SkipNext>
+              <SkipNext />
             </IconButton>
+            <Typography>{`${votes} / ${needed_votes_to_skip}`}</Typography>
           </div>
         </Grid>
       </Grid>
